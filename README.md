@@ -1,27 +1,77 @@
-# Ng
+# Implementación de meta descripción y de title 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.1.
+´´´´´´´´´
+npm install
+´´´´´´´´´
 
-## Development server
+- se envia los datos de seo enlas url de la siguiente forma en el routing.module.ts.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+´´´´´´´´
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { Pagina1Component } from './components/pagina1/pagina1.component';
+import { Pagina2Component } from './components/pagina2/pagina2.component';
+import { Pagina3Component } from './components/pagina3/pagina3.component';
 
-## Code scaffolding
+const routes: Routes = [
+  {path: 'pagina1', component: Pagina1Component, data: { titulo: 'pagina 1', descripcion: ' esta es la descripción de la pagina 1' }},
+  {path: 'pagina2', component: Pagina2Component, data: { titulo: 'pagina 2', descripcion: ' esta es la descripción de la pagina 2' }},
+  {path: 'pagina3', component: Pagina3Component, data: { titulo: 'pagina 3', descripcion: ' esta es la descripción de la pagina 3' }}
+];
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
 
-## Build
+´´´´´´´´
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- en el app.component.ts se extraeria de la sigente forma.
 
-## Running unit tests
+´´´´´´´´
+import { Component } from '@angular/core';
+import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
+import { Router, ActivationEnd } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  titulo: string;
+  descripcion: string;
+  constructor(private router: Router, private title: Title, private meta: Meta) {
+    this.getDataRoute().subscribe((data: any) => {
+      console.log(data);
+      this.titulo = data.titulo;
+      this.descripcion = data.descripcion;
+      this.title.setTitle(this.titulo);
+      const metaTag: MetaDefinition = {
+        name: 'description',
+        content: this.descripcion
+      };
+      this.meta.updateTag(metaTag);
+    });
+  }
 
-## Running end-to-end tests
+  getDataRoute() {
+    return this.router.events
+      .pipe(
+        filter((event) => {
+          return event instanceof ActivationEnd;
+        }),
+        filter((event: ActivationEnd) => {
+          return event.snapshot.firstChild === null;
+        }),
+        map((event: ActivationEnd) => {
+          return event.snapshot.data;
+        })
+      );
+  }
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+}
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+´´´´´´´´
