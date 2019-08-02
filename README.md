@@ -1,12 +1,12 @@
 # Implementación de meta descripción y de title 
 
-´´´´´´´´´
+`````````
 npm install
-´´´´´´´´´
+`````````
 
 - se envia los datos de seo enlas url de la siguiente forma en el routing.module.ts.
 
-´´´´´´´´
+`````````
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { Pagina1Component } from './components/pagina1/pagina1.component';
@@ -25,11 +25,11 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
-´´´´´´´´
+`````````
 
 - en el app.component.ts se extraeria de la sigente forma.
 
-´´´´´´´´
+`````````
 import { Component } from '@angular/core';
 import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
 import { Router, ActivationEnd } from '@angular/router';
@@ -74,4 +74,4 @@ export class AppComponent {
 
 }
 
-´´´´´´´´
+`````````
